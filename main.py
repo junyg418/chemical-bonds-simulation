@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 import hydro
 
+
 WHITE = (255,255,255)
 GRAY = (128,128,128)
 BLACK = (0,0,0)
@@ -18,10 +19,10 @@ pygame.display.set_caption("Bond simulation")
 
 info_font = pygame.font.SysFont("malgungothicsemilight", 16)
 atom_select = 1 # 원자번호 : defult 수소원자
+atom_list = [] # fill 하고 난 후 리스트 for 문으로 전부 drow -> 원자번호 삭제됨  
 
 def simulationRun():
     global atom_select
-    atom_list = [] # fill 하고 난 후 리스트 for 문으로 전부 drow -> 원자번호 삭제됨  
     while True:
         pygame.display.update()
         for event in pygame.event.get():
@@ -31,15 +32,17 @@ def simulationRun():
             if event.type == MOUSEBUTTONUP: # 마우스 클릭시 원자 생성
                 mouse_pos = pygame.mouse.get_pos()
                 if atom_select == 1:
-                    pass # 수소 원자 생성
-                    #hydro
+                    atom = hydro.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
+                    atom_list.append(atom)
                 else:
-                    atom = hydro.Atom(GameDisplay, atom_select, mouse_pos) # 원자 인스턴트 생성
-                    atom.drowPlus()
+                    atom = hydro.Atom(GameDisplay, atom_select, mouse_pos) # 원자 인스턴k트 생성
                     atom_list.append(atom)
             if event.type == KEYDOWN: # 원자번호 설정 - k
                 if event.key == K_k:
                     atom_select = atomNumInput()
+#------------------------------------------------------------------------------------------------ 위 event 처리
+        atomsDrow()
+
 
 def atomNumInput():
     '''
@@ -76,10 +79,26 @@ def atomNumInput():
                     atom_num = atom_num + '8'
                 elif event.key == K_9 or event.key == K_KP9:
                     atom_num = atom_num + '9'
+                elif event.key == K_BACKSPACE: # 문자열 지우기
+                    if atom_num:
+                        atom_num = atom_num[:-1]
+                    else:
+                        atom_num = ''
                 elif event.key == K_RETURN: # ENTER 눌렀을 때 
                     return int(atom_num)
 
         GameDisplay.fill(GRAY)
         atom_text = info_font.render(f'atomNum : {atom_num}', True, BLACK)
         GameDisplay.blit(atom_text, (10,0))
+
+
+def atomsDrow():
+    '''
+    원자들 그리는 함수
+    '''
+    for atom in atom_list:
+        atom.drowPlus()
+
+
+
 simulationRun()

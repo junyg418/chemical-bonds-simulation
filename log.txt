@@ -1,0 +1,10 @@
+2022-06-15-01:10~05:45
+Atom class, atomNumInput 함수, simulationRun 함수등 구동되게끔
+5시간동안 작업합
+
+2022-06-15-14:38
+hydro/Hydro class Atom의 상속 받은 클라스 
+수소의 경우 소수결합의 특징을 주려한다
+simulationRun 함수 중 모든 원자 도형이 삭제되고 하는것을 막으려
+atomDrow 함수 제작
+원자번호 작성 쉽게하려 jugi 하고서 보상 
