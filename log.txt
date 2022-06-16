@@ -8,3 +8,6 @@ hydro/Hydro class Atom의 상속 받은 클라스
 simulationRun 함수 중 모든 원자 도형이 삭제되고 하는것을 막으려
 atomDrow 함수 제작
 원자번호 작성 쉽게하려 jugi 하고서 보상 
+
+2022-06-16
+클릭시 원자인 경우를 구별할 수 있는 기능 추가

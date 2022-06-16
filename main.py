@@ -7,6 +7,8 @@ import hydro
 WHITE = (255,255,255)
 GRAY = (128,128,128)
 BLACK = (0,0,0)
+RED = (255,0,0)
+
 
 pygame.init()
 
@@ -29,8 +31,10 @@ def simulationRun():
             if event.type == QUIT: # x 버튼 눌렀을 떄
                 pygame.quit()
                 sys.exit()
-            if event.type == MOUSEBUTTONUP: # 마우스 클릭시 원자 생성
+            if event.type == MOUSEBUTTONUP: # 마우스 클릭시 원자 인스턴트 생성
                 mouse_pos = pygame.mouse.get_pos()
+                if GameDisplay.get_at(mouse_pos) == RED: # 원자를 클릭했을 경우
+                    pass
                 if atom_select == 1:
                     atom = hydro.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
                     atom_list.append(atom)
