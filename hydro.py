@@ -1,4 +1,5 @@
 import pygame
+import math
 
 RED = (255,0,0)
 BLUE = (0,103,163)
@@ -50,8 +51,20 @@ class Atom:
                 cnt += 1
         self.Kcnt, self.Lcnt, self.Mcnt, self.Ncnt = mins_value
 
+
+    def clickEvent(self, now_pos:tuple(int))->bool:
+        self.x_pos, self.y_pos = self.plusPos
+        self.now_x, self.now_y - now_pos
+
+        self.sqx = (self.now_x-self.x_pos)**2
+        self.sqy = (self.now_y-self.y_pos)**2
+
+        if math.sqrt(self.sqx + self.sqy) < 10:
+            return True
+        return False
+
+
     def drowPlus(self):
-        # self.display.fill(128,128,128)
         pygame.draw.circle(self.display, RED, self.plusPos, 10)
         self.display.blit(self.plustxt, self.plusPos)
 

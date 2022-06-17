@@ -35,18 +35,18 @@ def simulationRun():
                 mouse_pos = pygame.mouse.get_pos()
                 if GameDisplay.get_at(mouse_pos) == RED: # 원자를 클릭했을 경우
                     pass
-                if atom_select == 1:
-                    atom = hydro.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
-                    atom_list.append(atom)
-                else:
-                    atom = hydro.Atom(GameDisplay, atom_select, mouse_pos) # 원자 인스턴k트 생성
-                    atom_list.append(atom)
+                else: # 원자 생성
+                    if atom_select == 1:
+                        atom = hydro.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
+                        atom_list.append(atom)
+                    else:
+                        atom = hydro.Atom(GameDisplay, atom_select, mouse_pos) # 원자 인스턴k트 생성
+                        atom_list.append(atom)
             if event.type == KEYDOWN: # 원자번호 설정 - k
                 if event.key == K_k:
                     atom_select = atomNumInput()
 #------------------------------------------------------------------------------------------------ 위 event 처리
         atomsDrow()
-
 
 def atomNumInput():
     '''
