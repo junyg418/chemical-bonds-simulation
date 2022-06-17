@@ -3,6 +3,7 @@ import math
 
 RED = (255,0,0)
 BLUE = (0,103,163)
+YELLO = (255, 212, 0)
 BLACK = (0,0,0)
 
 jugiulpeo = {1: ('H', 2.2), 2: ('He', 0.0), 3: ('Li', 0.98), 4: ('Be', 1.57), 5: ('B', 2.04), 6: ('C', 2.55), 7: ('N', 3.04), 8: ('O', 3.44), 9: ('F', 3.98), 10: ('Ne', 0.0), 11: ('Na', 0.93), 12: ('Mg', 1.31), 13: ('Al', 1.61), 14: ('Si', 1.9), 15: ('P', 2.19), 16: ('S', 2.58), 17: ('Cl', 3.16), 18: ('Ar', 0.0), 19: ('K', 0.82), 20: ('Ca', 1.0)}
@@ -22,6 +23,7 @@ class Atom:
         self.plustxt = atom_num_font.render(f'{jugiulpeo[self.plus_pw][0]}', True, BLACK)
         self.minus = minus
         self.plusPos = pos
+        self.color = RED
 
         self.Kradius = 20 # 1주기 전자 원자핵 주위 공전 거리
         self.Lradius = 60 # 2주기 전자 
@@ -52,24 +54,40 @@ class Atom:
         self.Kcnt, self.Lcnt, self.Mcnt, self.Ncnt = mins_value
 
 
-    def clickEvent(self, now_pos:tuple(int))->bool:
+    def clickEvent(self, now_pos:tuple)->bool:
+        '''
+        원자 클릭시 나타나는 연산되는 이벤트
+        return -> bool
+        '''
         self.x_pos, self.y_pos = self.plusPos
-        self.now_x, self.now_y - now_pos
+        self.now_x, self.now_y = now_pos
 
         self.sqx = (self.now_x-self.x_pos)**2
         self.sqy = (self.now_y-self.y_pos)**2
 
-        if math.sqrt(self.sqx + self.sqy) < 10:
+        if math.sqrt(self.sqx + self.sqy) < 10: # 피타고라스 정리 빗변 연산
+
+            if self.display.get_at(self.plusPos) == RED:
+                self.color = YELLO
+            else:
+                self.color = RED
+
             return True
         return False
 
 
     def drowPlus(self):
-        pygame.draw.circle(self.display, RED, self.plusPos, 10)
+        '''
+        도형 그리는 함수
+        '''
+        pygame.draw.circle(self.display, self.color, self.plusPos, 10)
         self.display.blit(self.plustxt, self.plusPos)
 
 
 class Hydro(Atom):
+    '''
+    수소일 경우 상속
+    '''
     def __init__(self, display, pos: tuple) -> None:
         super().__init__(display, 1, pos)
         self.plus_pw = 1

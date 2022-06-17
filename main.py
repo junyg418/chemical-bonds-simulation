@@ -34,7 +34,7 @@ def simulationRun():
             if event.type == MOUSEBUTTONUP: # 마우스 클릭시 원자 인스턴트 생성
                 mouse_pos = pygame.mouse.get_pos()
                 if GameDisplay.get_at(mouse_pos) == RED: # 원자를 클릭했을 경우
-                    pass
+                    clickChecker(mouse_pos)
                 else: # 원자 생성
                     if atom_select == 1:
                         atom = hydro.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
@@ -47,6 +47,8 @@ def simulationRun():
                     atom_select = atomNumInput()
 #------------------------------------------------------------------------------------------------ 위 event 처리
         atomsDrow()
+
+
 
 def atomNumInput():
     '''
@@ -94,6 +96,13 @@ def atomNumInput():
         GameDisplay.fill(GRAY)
         atom_text = info_font.render(f'atomNum : {atom_num}', True, BLACK)
         GameDisplay.blit(atom_text, (10,0))
+
+
+
+def clickChecker(now_pos):
+    for atom in atom_list:
+        if atom.clickEvent(now_pos):
+            print('yes')
 
 
 def atomsDrow():
