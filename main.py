@@ -1,13 +1,14 @@
 import sys
 import pygame
 from pygame.locals import *
-import hydro
+import ATOM
 
 
 WHITE = (255,255,255)
 GRAY = (128,128,128)
 BLACK = (0,0,0)
 RED = (255,0,0)
+YELLO = (255, 212, 0)
 
 
 pygame.init()
@@ -23,6 +24,7 @@ info_font = pygame.font.SysFont("malgungothicsemilight", 16)
 atom_select = 1 # 원자번호 : defult 수소원자
 atom_list = [] # fill 하고 난 후 리스트 for 문으로 전부 drow -> 원자번호 삭제됨  
 
+
 def simulationRun():
     global atom_select
     while True:
@@ -31,17 +33,25 @@ def simulationRun():
             if event.type == QUIT: # x 버튼 눌렀을 떄
                 pygame.quit()
                 sys.exit()
+        
             if event.type == MOUSEBUTTONUP: # 마우스 클릭시 원자 인스턴트 생성
                 mouse_pos = pygame.mouse.get_pos()
-                if GameDisplay.get_at(mouse_pos) == RED: # 원자를 클릭했을 경우
+
+                if GameDisplay.get_at(mouse_pos) != GRAY: # 원자를 클릭했을 경우
                     clickChecker(mouse_pos)
+                    # if ATOM.selected_atom == 2: # 선택된 원자가 2개일 떄 원자 결합 -> 분자
+
+                        # atomicBond()
+
                 else: # 원자 생성
                     if atom_select == 1:
-                        atom = hydro.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
+                        atom = ATOM.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
                         atom_list.append(atom)
                     else:
-                        atom = hydro.Atom(GameDisplay, atom_select, mouse_pos) # 원자 인스턴k트 생성
+                        atom = ATOM.Atom(GameDisplay, atom_select, mouse_pos) # 원자 인스턴k트 생성
                         atom_list.append(atom)
+                
+
             if event.type == KEYDOWN: # 원자번호 설정 - k
                 if event.key == K_k:
                     atom_select = atomNumInput()
@@ -98,11 +108,23 @@ def atomNumInput():
         GameDisplay.blit(atom_text, (10,0))
 
 
+selected_atoms = []
 
 def clickChecker(now_pos):
+    '''
+    원자를 클릭하였을 떄 호출되는 함수
+    선택 시켜주거나, 원자간 결합 호출하여 결합
+    '''
     for atom in atom_list:
-        if atom.clickEvent(now_pos):
-            print('yes')
+        if atom.clickEvent(now_pos): # 클릭 한 곳 원자 확인
+            # atom : 클릭한 곳의 원자
+            if selected_atoms.__len__():
+                selected_atoms[0].color = RED
+                atomicBond(selected_atoms[0], atom) # 원자간 결합 함수 호출
+                selected_atoms.pop()
+            else: # 선택한 원자 한개 일 때
+                atom.color = YELLO
+                selected_atoms.append(atom)
 
 
 def atomsDrow():
@@ -113,5 +135,6 @@ def atomsDrow():
         atom.drowPlus()
 
 
-
+def atomicBond(atom_A, atom_B):
+    pass
 simulationRun()
