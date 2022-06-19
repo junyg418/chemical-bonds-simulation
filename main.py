@@ -39,10 +39,6 @@ def simulationRun():
 
                 if GameDisplay.get_at(mouse_pos) != GRAY: # 원자를 클릭했을 경우
                     clickChecker(mouse_pos)
-                    # if ATOM.selected_atom == 2: # 선택된 원자가 2개일 떄 원자 결합 -> 분자
-
-                        # atomicBond()
-
                 else: # 원자 생성
                     if atom_select == 1:
                         atom = ATOM.Hydro(GameDisplay, mouse_pos) # 수소 원자 생성
@@ -56,7 +52,7 @@ def simulationRun():
                 if event.key == K_k:
                     atom_select = atomNumInput()
 #------------------------------------------------------------------------------------------------ 위 event 처리
-        atomsDrow()
+        atomsDraw()
 
 
 
@@ -109,32 +105,42 @@ def atomNumInput():
 
 
 selected_atoms = []
-
 def clickChecker(now_pos):
+    global selected_atoms
     '''
     원자를 클릭하였을 떄 호출되는 함수
     선택 시켜주거나, 원자간 결합 호출하여 결합
     '''
     for atom in atom_list:
+        # atom : 클릭한 곳의 원자
         if atom.clickEvent(now_pos): # 클릭 한 곳 원자 확인
-            # atom : 클릭한 곳의 원자
-            if selected_atoms.__len__():
-                selected_atoms[0].color = RED
-                atomicBond(selected_atoms[0], atom) # 원자간 결합 함수 호출
-                selected_atoms.pop()
-            else: # 선택한 원자 한개 일 때
-                atom.color = YELLO
+            if atom.color == YELLO:
                 selected_atoms.append(atom)
+                print('append',selected_atoms) # 삭제 예정
+            else: # 노랑색일 떄
+                selected_atoms.pop()
+                print('pop',selected_atoms) # 삭제 예정
+
+        if selected_atoms.__len__() == 2:
+            print('atom',selected_atoms[0],selected_atoms[1]) # 삭제 예정
+            atomicBond(selected_atoms[0], selected_atoms[1]) # 원자간 결합 함수 호출
+            selected_atoms[0].color = RED
+            selected_atoms[1].color = RED
+            selected_atoms = []
 
 
-def atomsDrow():
+def atomsDraw():
     '''
     원자들 그리는 함수
     '''
     for atom in atom_list:
-        atom.drowPlus()
+        atom.drawPlus()
+    for bond in bond_list:
+        bond.drawBond()
 
-
+bond_list = []
 def atomicBond(atom_A, atom_B):
-    pass
+    bond = ATOM.Bond(GameDisplay, atom_A, atom_B)
+    bond_list.append(bond)
+
 simulationRun()

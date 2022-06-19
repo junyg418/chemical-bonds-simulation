@@ -1,5 +1,7 @@
 import pygame
 import math
+# import main
+
 
 RED = (255,0,0)
 BLUE = (0,103,163)
@@ -26,7 +28,7 @@ class Atom:
         atom_num_font = pygame.font.SysFont("malgungothicsemilight", 16)
         self.plustxt = atom_num_font.render(f'{jugiulpeo[self.plus_pw][0]}', True, BLACK)
         self.minus = minus
-        self.plusPos = pos
+        self.pos = pos
         self.color = RED
 
         self.Kradius = 20 # 1주기 전자 원자핵 주위 공전 거리
@@ -58,11 +60,12 @@ class Atom:
         # self.Kcnt, self.Lcnt, self.Mcnt, self.Ncnt = mins_value
         return mins_value
 
+
     def clickEvent(self, now_pos:tuple)->bool:
         '''
         원자 클릭시 나타나는 연산되는 이벤트
         '''
-        self.x_pos, self.y_pos = self.plusPos
+        self.x_pos, self.y_pos = self.pos
         self.now_x, self.now_y = now_pos
 
         self.sqx = (self.now_x-self.x_pos)**2
@@ -70,17 +73,22 @@ class Atom:
 
         if math.sqrt(self.sqx + self.sqy) < 10: # 피타고라스 정리 빗변 연산
 
-            if self.display.get_at(self.plusPos) == RED:
+            if self.display.get_at(self.pos) == RED:
+                self.color = YELLO
+                return True
+            elif self.display.get_at(self.pos) == YELLO:
+                self.color = RED
                 return True
         return False
 
 
-    def drowPlus(self):
+    def drawPlus(self):
         '''
         도형 그리는 함수
         '''
-        pygame.draw.circle(self.display, self.color, self.plusPos, 10)
-        self.display.blit(self.plustxt, self.plusPos)
+        pygame.draw.circle(self.display, self.color, self.pos, 10)
+        self.display.blit(self.plustxt, self.pos)
+
 
 
 class Hydro(Atom):
@@ -94,3 +102,59 @@ class Hydro(Atom):
         super().__init__(display, 1, pos)
         self.plus_pw = 1
         self.minus = 1
+
+
+
+class Bond:
+    '''
+    두 원자간 결합구조
+    '''
+    def __init__(self, display, atom_A, atom_B) -> None:
+        self.display = display
+        self.atom_A = atom_A
+        self.atom_B = atom_B
+
+        self.posCal()
+
+    
+    def posCal(self):
+        '''
+        원과 원의 둘래를 지나는 두 점의 길이의 최솟값을 반환하는 함수
+        '''
+        def graph(x):
+            nonlocal x1,x2,tan0
+            graphYval = tan0*(x-x1)+y1
+            return graphYval
+        x1, y1 = self.atom_A.pos
+        x2, y2 = self.atom_B.pos
+
+        dx = x1-x2
+        dy = y1-y2
+        tan0 = dy/dx
+
+        bit = math.sqrt(dx**2 + dy**2)
+        cos0 = dx/bit
+
+        
+        x_val = cos0*10 # 10은 원자의 반지름
+        
+        # if x1 < x2:
+        atom_Ax = x1-x_val
+        atom_Ay = graph(atom_Ax)
+
+        atom_Bx = x2+x_val
+        atom_By = graph(atom_Bx)
+
+        # elif x1> x2:
+        #     atom_Ax = x1-x_val
+        #     atom_Ay = graph(atom_Ax)
+
+        #     atom_Bx = x2+x_val
+        #     atom_By = graph(atom_Bx)
+        self.atom_A_pos, self.atom_B_pos = (atom_Ax, atom_Ay), (atom_Bx, atom_By)
+
+        
+
+
+    def drawBond(self):
+        pygame.draw.line(self.display, BLACK, self.atom_A_pos, self.atom_B_pos)
