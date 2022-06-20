@@ -125,6 +125,7 @@ class Bond:
             nonlocal x1,x2,tan0
             graphYval = tan0*(x-x1)+y1
             return graphYval
+    
         x1, y1 = self.atom_A.pos
         x2, y2 = self.atom_B.pos
 
@@ -135,26 +136,33 @@ class Bond:
         bit = math.sqrt(dx**2 + dy**2)
         cos0 = dx/bit
 
-        
         x_val = cos0*10 # 10은 원자의 반지름
         
-        # if x1 < x2:
         atom_Ax = x1-x_val
         atom_Ay = graph(atom_Ax)
 
         atom_Bx = x2+x_val
         atom_By = graph(atom_Bx)
 
-        # elif x1> x2:
-        #     atom_Ax = x1-x_val
-        #     atom_Ay = graph(atom_Ax)
-
-        #     atom_Bx = x2+x_val
-        #     atom_By = graph(atom_Bx)
         self.atom_A_pos, self.atom_B_pos = (atom_Ax, atom_Ay), (atom_Bx, atom_By)
 
-        
+    
+    def bondInfo(self):
+        pass
 
+
+    def hydroBond(self)-> bool:
+        if self.atom_A.plus_pw == 1: # 수소결합
+            for num in range(7,10): # N, O, F 일 경우 
+                if self.atom_B.plus_pw == num:
+                    return True
+
+        if self.atom_B.plus_pw == 1:
+            for num in range(7,10): # N, O, F 일 경우 
+                if self.atom_A.plus_pw == num:
+                    return True
+        return False
+    
 
     def drawBond(self):
         pygame.draw.line(self.display, BLACK, self.atom_A_pos, self.atom_B_pos)
