@@ -138,9 +138,9 @@ def atomsDraw():
     for bond in bond_list:
         bond.drawBond()
 
-bond_list = []
+bonded_list = [] # 결합된 분자들의 리스트
 def atomicBond(atom_A, atom_B):
     bond = ATOM.Bond(GameDisplay, atom_A, atom_B)
-    bond_list.append(bond)
+    bonded_list.append(bond)
 
 simulationRun()
